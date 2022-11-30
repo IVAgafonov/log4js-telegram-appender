@@ -23,15 +23,15 @@ const telegramAppender = {
         return (loggingEvent) => {
             const textMessage = loggingEvent.data[0].slice(0, 255);
 
+            if (config.levels && !config.levels.includes(loggingEvent.level.levelStr)) {
+                return;
+            }
             if (msgHM.has(textMessage)) {
                 console.log(`Message was sent recently`);
                 return;
             }
-            msgHM.set(textMessage, new Date())
+            msgHM.set(textMessage, new Date());
 
-            if (config.levels && !config.levels.includes(loggingEvent.level.levelStr)) {
-                return;
-            }
             let message = `Error from: <i>${source}</i>:
 ${textMessage}
 `;
