@@ -21,11 +21,13 @@ const telegramAppender = {
             link = config.link.replaceAll('{{source}}', source);
         }
         return (loggingEvent) => {
-            const textMessage = loggingEvent.data[0].slice(0, 255);
-
             if (config.levels && !config.levels.includes(loggingEvent.level.levelStr)) {
                 return;
             }
+
+            const textMessage = loggingEvent.data[0] && typeof loggingEvent.data[0].slice === 'function' ?
+                loggingEvent.data[0].slice(0, 255) : 'Unknown message';
+
             if (msgHM.has(textMessage)) {
                 console.log(`Message was sent recently`);
                 return;
